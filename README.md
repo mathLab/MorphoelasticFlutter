@@ -3,7 +3,7 @@ A Python implementation of the model proposed in the research paper submitted to
 
 In this repository you find a standalone Python code that exploits the FEniCS Project Version 2019.1.0 to implement the proposed morphoelastic rod models for growing plant shoots that sense and actively respond to different stimuli (gravitropism, proprioception, and endogenous oscillators), with different tip growth profiles. 
 
-GeneralGrowingShoot.py provide a general way to prescribe tip growth on the subapical growing region of constant length lg, provided that the initial length l0 is larger than lg. Different models for tip growth are provided, and can be selected by commenting and uncommenting the proper expressions for both REGR and REGR_k.
+GeneralGrowingShoot.py provide a general way to prescribe tip growth on the subapical growing region of constant length lg, provided that the initial length is larger than lg. Different models for tip growth are provided, and can be selected by commenting and uncommenting the proper expressions for both REGR and REGR_k.
 
 After computing the solution, these codes generate a sequence of images of the 3D rod configuration (see function save_plot) and of its tip projection on the (e1,e3)-plane (see function save_plot2), which are saved in the local subfolders "Movie" and "Movie2", respectively. 
 Computed solutions can be saved in the local subfolder "Data" by means of the function save_data(). 
