@@ -1,6 +1,6 @@
-'''This code implements a 3D rod model for growing plant shoots. Growth is localized at the organ tip, in a growing region of constant length, 
-and has a general form. This code includes lignification (by rod stiffening), plant responses to gravity (sensed by means of statoliths), to bending 
-(proprioception) and an endogenous oscillator.'''
+'''This code implements a 3D rod model for growing plant shoots. Growth is localized at the organ tip, in a growing region of constant length. 
+This code includes lignification (by rod stiffening), plant responses to gravity (sensed by means of statoliths), to bending (proprioception) 
+and an endogenous oscillator.'''
 
 from __future__ import print_function
 from __future__ import unicode_literals
@@ -162,8 +162,8 @@ Tau_e  = 24*60        # s - Time period for endogenous oscillator
 Tau_l  = 6*24*60*60   # s - Maturation/Lignification time
 
 # Geometry
-L0 = 7.2E-2     # m - initial length
-lg = 7.2E-2       # m - growing zone
+L0 = 7.1E-2     # m - initial length
+lg = 7.1E-2     # m - growing zone
 R  = 5E-4       # m - radius
 A  = np.pi*R**2 # m^2 - cross sectional area
 
@@ -181,7 +181,7 @@ mu   = 2*EY*(1+nu)  # shear modulus
 J    = 2*I          # parameter depending on the cross-sectional shape
 Jmax = Lig*J
 rho  = 1000         # Kg/m^3 - density
-alpha= 0.02          # internal oscillator sensitivity
+alpha= 0            # internal oscillator sensitivity
 beta = 0.8          # gravitropic sensitivity
 eta  = 20           # proprioceptic sensitivity
 
@@ -189,9 +189,9 @@ eta  = 20           # proprioceptic sensitivity
 Q1   = 0            # N/m - distributed load along e1 per unit length
 Q2   = -rho*g*A     # N/m - distributed load along e2 per unit length
 Q3   = 0            # N/m - distributed load along e3 per unit length
-al1  = 0            # N   - apical load along e1
+al1  = 1E-5         # N   - apical load along e1
 al2  = 0            # N   - apical load along e2   
-al3  = 0            # N   - apical load along e3   
+al3  = 1E-5         # N   - apical load along e3   
 
 ###########################################  FEM IMPLEMENTATION  ##############################################    
 # Create mesh
@@ -240,9 +240,12 @@ eta    = Constant(eta)
 q1     = Constant(Q1)
 q2     = Constant(Q2)
 q3     = Constant(Q3)
-p1     = Constant(al1)
-p2     = Constant(al2)
-p3     = Constant(al3)
+#p1     = Expression('a*exp(-t*ts)', a=al1, t=0, ts=Tau_s, degree=1)
+#p2     = Expression('a*exp(-t*ts)', a=al2, t=0, ts=Tau_s, degree=1)
+#p3     = Expression('t<T0 ? 0:a*exp((T0-t-1)*ts)', a=al3, t=0, T0=58, ts=Tau_s, degree=1)
+p1     = Expression('t<T0 ? (t<1 ? 2*f0*sin(om*t):0):(t>(T0+1) ? 0:f0*sin(om*t))', f0=al1, t=0, T0=58, om=np.pi, c=2*np.pi, degree=1)
+p2     = Expression('al',al=al2,t=0,degree=1)
+p3     = Expression('t<T0 ? (t<1 ? f0*sin(om*t):0):(t>(T0+1)? 0:-2*f0*sin(om*(t-T0)))', f0=al3, t=0, T0=58, om=np.pi, c=2*np.pi, degree=1)
 B0     = Constant(B0)
 Bmax   = Constant(Bmax)
 J0     = Constant(mu*J)
@@ -445,10 +448,10 @@ proc.daemon = True
 proc.start()
 proc.join()
 
-proc2 = mp.Process(target=save_plot2)
-proc2.daemon = True
-proc2.start()
-proc2.join()
+#proc2 = mp.Process(target=save_plot2)
+#proc2.daemon = True
+#proc2.start()
+#proc2.join()
 
 #################################################### SOLVE ########################################################  
 while t<10000:
@@ -457,6 +460,9 @@ while t<10000:
     # Update current time and all functions depending on time
     t += dt
     length.t = t
+    p1.t     = t
+    p2.t     = t
+    p3.t     = t
     v1.t     = t # internal oscillator component along d1
     v2.t     = t # internal oscillator component along d2
     # Update variables
