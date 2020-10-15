@@ -6,6 +6,7 @@ growing plant shoots that sense and actively respond to different stimuli (gravi
 Different models for tip growth are provided: 
   1. GeneralGrowingShoot.py provide a general way to prescribe tip growth on a subapical growing region of constant length.
   2. GrowingShootEx2.py is an implementation that uses the analytical solution for the growth model given by the Example 2 in the paper.
+
 After computing the solution, these codes generate a sequence of images of the 3D rod configuration (see function save_plot) and of its tip projection on the 
 (e1,e3)-plane (see function save_plot2), which are saved in the local subfolders "Movie" and "Movie2", respectively. 
 Computed solutions can be saved in the local subfolder "Data" by means of the function save_data(). 
