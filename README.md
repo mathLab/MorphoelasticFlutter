@@ -1,5 +1,5 @@
 # MorphoelasticFlutter
-A Python implementation of the model proposed in the research paper submitted to Philosophical Transactions of the Royal Society A  
+A Python implementation of the model proposed in the paper "Nutations in growing plant shoots as a morphoelastic flutter instability" (https://doi.org/10.1098/rsta.2020.0116) 
 
 In this repository you find a standalone Python code that exploits the FEniCS Project Version 2019.1.0 to implement the proposed morphoelastic rod models for growing plant shoots that sense and actively respond to different stimuli (gravitropism, proprioception, and endogenous oscillators), with different tip growth profiles. 
 
